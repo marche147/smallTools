@@ -19,6 +19,8 @@ Add Restricted token option
 #pragma comment(lib, "../x64/Release/syscall.lib")
 #pragma comment(lib, "../x64/Release/CommonLib.lib")
 
+
+
 void usage(char* arg)
 {
 	printf("usage : %s <pid> <shellcode_bin>\n", arg);
@@ -74,7 +76,7 @@ int main(int argc, char* argv[])
 		printf("Cannot open process. %d\n", GetLastError());
 		goto end;
 	}
-	addr = VirtualAllocEx(hProcess, NULL, 0x1000, MEM_COMMIT, PAGE_EXECUTE_READWRITE);
+	addr = VirtualAllocEx(hProcess, NULL, ROUNDUP(length, PAGE_SIZE), MEM_COMMIT, PAGE_EXECUTE_READWRITE);
 	if (!addr) {
 		printf("Cannot allocate remote memory. %d\n", GetLastError());
 		goto end;
