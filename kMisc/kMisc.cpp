@@ -14,7 +14,11 @@ NTSTATUS kMiscQueryDriverInfoByDeviceName(PDRIVER_BY_DEVICE_IO pParam)
 	IO_STATUS_BLOCK iosb;
 	PDEVICE_OBJECT pDevObj = NULL;
 	PDRIVER_OBJECT pDrvObj = NULL;
+	PFILE_OBJECT fileObject = NULL;
 	ULONG copylen;
+
+	UNREFERENCED_PARAMETER(iosb);
+	UNREFERENCED_PARAMETER(oa);
 
 	if (pParam->deviceNameLen > MAX_DEVICE_NAME_LEN) return STATUS_NO_MEMORY;
 	buffer = (PWCHAR)ExAllocatePool(NonPagedPoolNx, pParam->deviceNameLen);
@@ -28,18 +32,15 @@ NTSTATUS kMiscQueryDriverInfoByDeviceName(PDRIVER_BY_DEVICE_IO pParam)
 		KMISC_PRINT("Exception : %08x\n", s);
 	}
 	RtlInitUnicodeString(&ustrFileName, buffer);
-	InitializeObjectAttributes(&oa, &ustrFileName, OBJ_CASE_INSENSITIVE, NULL, NULL);
+	KMISC_PRINT("File : %ws\n", buffer);
+	//InitializeObjectAttributes(&oa, &ustrFileName, OBJ_CASE_INSENSITIVE, NULL, NULL);
 
-	s = NtCreateFile(&hFile, GENERIC_READ, &oa, &iosb, NULL, FILE_ATTRIBUTE_NORMAL, 0, FILE_OPEN, FILE_NON_DIRECTORY_FILE, NULL, 0);
+	s = IoGetDeviceObjectPointer(&ustrFileName, FILE_READ_DATA, &fileObject, &pDevObj);		// calls ZwOpenFile internally
 	if (!NT_SUCCESS(s)) {
-		KMISC_PRINT("Failed create file %08x\n", s);
+		KMISC_PRINT("Failed get device pointer. %08x\n", s);
 		goto Finish;
 	}
-	s = ObReferenceObjectByHandle(hFile, GENERIC_READ, NULL, KernelMode, (PVOID*)&pDevObj, NULL);
-	if (!NT_SUCCESS(s)) {
-		KMISC_PRINT("Failed reference object %08x\n", s);
-		goto Finish;
-	}
+	
 	pDrvObj = pDevObj->DriverObject;
 	if (!pDrvObj) {
 		KMISC_PRINT("Weird device.\n");
@@ -63,8 +64,9 @@ NTSTATUS kMiscQueryDriverInfoByDeviceName(PDRIVER_BY_DEVICE_IO pParam)
 
 Finish:
 	if (buffer)	ExFreePool(buffer);
-	if (pDevObj) ObDereferenceObject(pDevObj);
-	if (hFile) NtClose(hFile);
+	//if (pDevObj) ObDereferenceObject(pDevObj);	// DO NOT Deref device object
+	if (fileObject)	ObDereferenceObject(fileObject);
+	if (hFile) ZwClose(hFile);
 	if (pDrvObj) ObDereferenceObject(pDrvObj);
 	return	s;
 }

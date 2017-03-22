@@ -740,3 +740,60 @@ BOOL CheckAndElevate()
 	if(ShellExecuteExW(&sei)) ExitProcess(-1);
 	return FALSE;	// never returns
 }
+
+BOOL LoadDriver(char* driverName, char* driverPath, BOOL forceOverride)
+{
+	SC_HANDLE scm;
+	SC_HANDLE scService;
+	BOOL result = FALSE;
+	char FilePath[MAX_PATH];
+
+
+	GetFullPathName(driverPath, MAX_PATH, FilePath, NULL);
+	scm = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
+	if (!scm)	return FALSE;
+
+	scService = CreateService(scm, driverName, driverName, SERVICE_ALL_ACCESS, SERVICE_KERNEL_DRIVER, SERVICE_DEMAND_START, SERVICE_ERROR_NORMAL, FilePath, NULL, NULL, NULL, NULL, NULL);
+	if (!scService) {
+		if (GetLastError() == ERROR_ALREADY_EXISTS || GetLastError() == ERROR_SERVICE_EXISTS) {
+			scService = OpenService(scm, driverName, SERVICE_ALL_ACCESS);
+			if (!scService) goto Finish;
+			if (forceOverride) {	// recreate
+				if (!DeleteService(scService)) goto Finish;
+				scService = CreateService(scm, driverName, driverName, SERVICE_ALL_ACCESS, SERVICE_KERNEL_DRIVER, SERVICE_DEMAND_START, SERVICE_ERROR_NORMAL, driverPath, NULL, NULL, NULL, NULL, NULL);
+				if (!scService)	goto Finish;
+			}
+		}
+		else goto Finish;
+	}
+	if (!StartService(scService, 0, NULL)) {
+		if (GetLastError() == ERROR_SERVICE_ALREADY_RUNNING) result = TRUE;
+	}
+	result = TRUE;
+
+Finish:
+	if (scm) CloseServiceHandle(scm);
+	if (scService) CloseServiceHandle(scService);
+	return result;
+}
+
+BOOL UnloadDriver(char* driverName)
+{
+	BOOL result = FALSE;
+	SC_HANDLE scm = NULL, scService = NULL;
+	SERVICE_STATUS s;
+
+	scm = OpenSCManager(NULL, NULL, SC_MANAGER_ALL_ACCESS);
+	if (!scm) return FALSE;
+
+	scService = OpenService(scm, driverName, SERVICE_ALL_ACCESS);
+	if (scService) {
+		ControlService(scService, SERVICE_CONTROL_STOP, &s);
+		if (DeleteService(scService))	result = TRUE;
+	}
+
+Finish:
+	if (scm)		CloseServiceHandle(scm);
+	if (scService)	CloseServiceHandle(scService);
+	return result;
+}

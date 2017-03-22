@@ -292,6 +292,8 @@ BOOL AnsiToUTF8(CHAR* szAnsiStr, WCHAR* wszUnicodeStr, ULONG ulBufLen);
 BOOL GetTokenInformationEx(HANDLE token, TOKEN_INFORMATION_CLASS tlc, PVOID *info, DWORD* retlen);
 VOID RtlInitUnicodeString(PUNICODE_STRING DestinationString, PCWSTR SourceString OPTIONAL);
 BOOL CheckAndElevate();
+BOOL LoadDriver(char* driverName, char* driverPath, BOOL forceOverride);
+BOOL UnloadDriver(char* driverName);
 
 /* AppContainer Related */
 HRESULT FindOrCreateAppContainerProfileEx(LPCWSTR pszChildFilePath, LPCWSTR pszDescription, PSID_AND_ATTRIBUTES pCapabilities, DWORD dwCapabilityCount, PSID *ppSid);
