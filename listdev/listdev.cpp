@@ -246,20 +246,6 @@ int main(int argc, char* argv[])
 		fatal("GetProcAddress");
 	}
 
-	UNICODE_STRING ustrFileName;
-	HANDLE hFile;
-	IO_STATUS_BLOCK iosb;
-	RtlInitUnicodeString(&ustrFileName, L"\\UdfsCdrom");
-	InitializeObjectAttributes(&oa, &ustrFileName, OBJ_CASE_INSENSITIVE, NULL, NULL);
-	s = NtOpenFile(&hFile, GENERIC_READ, &oa, &iosb, 0, FILE_OPEN);
-	if (NT_SUCCESS(s)) {
-		printf("success\n");
-		CloseHandle(hFile);
-	}
-	else {
-		printf("err : %08x\n", s);
-	}
-
 	RtlInitUnicodeString(&ustrDirName, L"\\");
 	InitializeObjectAttributes(&oa, &ustrDirName, OBJ_CASE_INSENSITIVE, NULL, NULL);
 	s = NtOpenDirectoryObject(&hDir, DIRECTORY_QUERY, &oa);
