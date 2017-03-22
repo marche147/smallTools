@@ -670,3 +670,73 @@ BOOL GetTokenInformationEx(HANDLE token, TOKEN_INFORMATION_CLASS tlc, PVOID *inf
 
 	return 0;
 }
+
+VOID
+RtlInitUnicodeString(
+	OUT PUNICODE_STRING DestinationString,
+	IN PCWSTR SourceString OPTIONAL
+)
+
+/*++
+
+Routine Description:
+
+The RtlInitUnicodeString function initializes an NT counted
+unicode string.  The DestinationString is initialized to point to
+the SourceString and the Length and MaximumLength fields of
+DestinationString are initialized to the length of the SourceString,
+which is zero if SourceString is not specified.
+
+Arguments:
+
+DestinationString - Pointer to the counted string to initialize
+
+SourceString - Optional pointer to a null terminated unicode string that
+the counted string is to point to.
+
+
+Return Value:
+
+None.
+
+--*/
+
+{
+
+	SIZE_T Length;
+
+	DestinationString->MaximumLength = 0;
+	DestinationString->Length = 0;
+	DestinationString->Buffer = (PWSTR)SourceString;
+	if ((SourceString)) {
+		Length = wcslen(SourceString) * sizeof(WCHAR);
+
+		//ASSERT(Length < MAX_USTRING);
+
+		if (Length >= MAX_USTRING) {
+			Length = MAX_USTRING - sizeof(UNICODE_NULL);
+		}
+
+		DestinationString->Length = (USHORT)Length;
+		DestinationString->MaximumLength = (USHORT)(Length + sizeof(UNICODE_NULL));
+	}
+
+	return;
+}
+
+BOOL CheckAndElevate()
+{
+	if (IsUserAnAdmin())		return TRUE;
+	WCHAR filePath[MAX_PATH];
+	SHELLEXECUTEINFOW sei;
+
+	ZeroMemory(&sei, sizeof(sei));
+	sei.cbSize = sizeof(sei);
+	sei.lpVerb = L"runas";
+	GetModuleFileNameW(GetModuleHandle(NULL), filePath, MAX_PATH * sizeof(WCHAR));
+	sei.lpFile = filePath;
+	sei.nShow = SW_SHOW;
+
+	if(ShellExecuteExW(&sei)) ExitProcess(-1);
+	return FALSE;	// never returns
+}

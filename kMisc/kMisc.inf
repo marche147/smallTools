@@ -1,0 +1,32 @@
+;
+; kMisc.inf
+;
+
+[Version]
+Signature="$WINDOWS NT$"
+Class=
+ClassGuid={68AE63EF-26DC-44A6-A199-FBAA9AC8449C}
+Provider=arch
+DriverVer=
+CatalogFile=arch.cat
+
+[DestinationDirs]
+DefaultDestDir = 12
+
+
+[SourceDisksNames]
+1 = %DiskName%,,,""
+
+[SourceDisksFiles]
+
+
+[Manufacturer]
+%ManufacturerName%=Standard,NT$ARCH$
+
+[Standard.NT$ARCH$]
+
+
+[Strings]
+ManufacturerName=""
+ClassName=""
+DiskName="kMisc Source Disk"
