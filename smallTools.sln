@@ -28,6 +28,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "listdev", "listdev\listdev.
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kMisc", "kMisc\kMisc.vcxproj", "{1A36B430-183E-41BC-94BF-FA6002C7964D}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "floppy", "floppy\floppy.vcxproj", "{46ACFB51-F26E-4FD1-B3BF-16C3EFE1A528}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3148915B-DB92-4D84-A282-1E04A476586C} = {3148915B-DB92-4D84-A282-1E04A476586C}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM = Debug|ARM
@@ -124,6 +129,18 @@ Global
 		{1A36B430-183E-41BC-94BF-FA6002C7964D}.Release|x86.ActiveCfg = Release|Win32
 		{1A36B430-183E-41BC-94BF-FA6002C7964D}.Release|x86.Build.0 = Release|Win32
 		{1A36B430-183E-41BC-94BF-FA6002C7964D}.Release|x86.Deploy.0 = Release|Win32
+		{46ACFB51-F26E-4FD1-B3BF-16C3EFE1A528}.Debug|ARM.ActiveCfg = Debug|Win32
+		{46ACFB51-F26E-4FD1-B3BF-16C3EFE1A528}.Debug|ARM64.ActiveCfg = Debug|Win32
+		{46ACFB51-F26E-4FD1-B3BF-16C3EFE1A528}.Debug|x64.ActiveCfg = Debug|x64
+		{46ACFB51-F26E-4FD1-B3BF-16C3EFE1A528}.Debug|x64.Build.0 = Debug|x64
+		{46ACFB51-F26E-4FD1-B3BF-16C3EFE1A528}.Debug|x86.ActiveCfg = Debug|Win32
+		{46ACFB51-F26E-4FD1-B3BF-16C3EFE1A528}.Debug|x86.Build.0 = Debug|Win32
+		{46ACFB51-F26E-4FD1-B3BF-16C3EFE1A528}.Release|ARM.ActiveCfg = Release|Win32
+		{46ACFB51-F26E-4FD1-B3BF-16C3EFE1A528}.Release|ARM64.ActiveCfg = Release|Win32
+		{46ACFB51-F26E-4FD1-B3BF-16C3EFE1A528}.Release|x64.ActiveCfg = Release|x64
+		{46ACFB51-F26E-4FD1-B3BF-16C3EFE1A528}.Release|x64.Build.0 = Release|x64
+		{46ACFB51-F26E-4FD1-B3BF-16C3EFE1A528}.Release|x86.ActiveCfg = Release|Win32
+		{46ACFB51-F26E-4FD1-B3BF-16C3EFE1A528}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
