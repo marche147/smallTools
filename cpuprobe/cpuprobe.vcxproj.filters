@@ -15,21 +15,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="ReadMe.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="Common.cpp">
+    <ClCompile Include="cpuprobe.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="common.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <MASM Include="syscall.asm">
-      <Filter>源文件</Filter>
-    </MASM>
   </ItemGroup>
 </Project>

@@ -797,3 +797,28 @@ Finish:
 	if (scService)	CloseServiceHandle(scService);
 	return result;
 }
+
+void SetConsoleColor(ConsoleColor c) {
+	HANDLE hCon = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO con_info;
+	GetConsoleScreenBufferInfo(hCon, &con_info);
+	SetConsoleTextAttribute(hCon, ((BYTE)c & 0xF) | (con_info.wAttributes & 0xF0));
+}
+
+int GetCurrentConsoleColor(void) {
+	HANDLE hCon = GetStdHandle(STD_OUTPUT_HANDLE);
+	CONSOLE_SCREEN_BUFFER_INFO con_info;
+	GetConsoleScreenBufferInfo(hCon, &con_info);
+	return con_info.wAttributes;
+}
+
+void cl_printf(ConsoleColor c, char* fmt, ...) {
+	va_list args;
+	int oldColor = GetCurrentConsoleColor();
+	SetConsoleColor(c);
+	va_start(args, fmt);
+	vprintf(fmt, args);
+	va_end(args);
+	SetConsoleColor((ConsoleColor)oldColor);
+	return;
+}

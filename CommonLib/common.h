@@ -265,6 +265,11 @@ typedef struct _OBJECT_DIRECTORY_INFORMATION {
 #define MAXUSHORT 0xFFFF
 #define MAX_USTRING ( sizeof(WCHAR) * (MAXUSHORT/sizeof(WCHAR)) )
 
+enum ConsoleColor {
+	DARKBLUE = 1, DARKGREEN, DARKTEAL, DARKRED, DARKPINK, DARKYELLOW,
+	GRAY, DARKGRAY, BLUE, GREEN, TEAL, RED, PINK, YELLOW, WHITE
+};
+
 /*
  * Function definitions
  */
@@ -294,7 +299,9 @@ VOID RtlInitUnicodeString(PUNICODE_STRING DestinationString, PCWSTR SourceString
 BOOL CheckAndElevate();
 BOOL LoadDriver(char* driverName, char* driverPath, BOOL forceOverride);
 BOOL UnloadDriver(char* driverName);
-
+void SetConsoleColor(ConsoleColor c);
+int GetCurrentConsoleColor(void);
+void cl_printf(ConsoleColor c, char* fmt, ...);
 /* AppContainer Related */
 HRESULT FindOrCreateAppContainerProfileEx(LPCWSTR pszChildFilePath, LPCWSTR pszDescription, PSID_AND_ATTRIBUTES pCapabilities, DWORD dwCapabilityCount, PSID *ppSid);
 HRESULT GetAppContainerSid(LPCWSTR pszChildFilePath, PSID *ppSid);
