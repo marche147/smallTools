@@ -48,7 +48,7 @@ copy_stack_param:
 	}
 }
 #else 
-#pragma comment(lib, "syscall.lib")
+//#pragma comment(lib, "syscall.lib")
 extern uint64_t NtSyscall(uint64_t SyscallIndex, uint64_t ArgCount, void* ArgArray[]);
 #endif
 
@@ -615,17 +615,18 @@ VOID LogPrint(char* fmt, ...)
 	FILE* fp = NULL;
 	static char* file_name = NULL;
 	time_t t = time(NULL);
-	struct tm* tm = localtime(&t);
+	struct tm tm;
+	errno_t err = localtime_s(&tm, &t);
 
 	if (!file_name) {
 		file_name = (char*)halloc(0x100);
 		if (!file_name)	return;
-		strftime(file_name, 0x100, _LOG_PATH "%Y_%m_%d_%H_%M_%S.log", tm);
+		strftime(file_name, 0x100, _LOG_PATH "%Y_%m_%d_%H_%M_%S.log", &tm);
 	}
-	fp = fopen(file_name, "w");
+	err = fopen_s(&fp, file_name, "w");
 	if (fp) {
 		char time_buffer[0x100];
-		strftime(time_buffer, 0x100, "[%F %T]", tm);
+		strftime(time_buffer, 0x100, "[%F %T]", &tm);
 		fprintf(fp, "%s %s", time_buffer, output_buffer);
 		fflush(fp);
 		fclose(fp);

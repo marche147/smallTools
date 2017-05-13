@@ -217,6 +217,8 @@ public:
 	static bool MP(void) { return CPU_Rep.f_81_EDX_[19]; }
 	static bool NX(void) { return CPU_Rep.f_81_EDX_[20]; }
 	static bool SVM(void) { return CPU_Rep.f_81_ECX_[2]; }
+	static bool DS(void) { return CPU_Rep.f_1_EDX_[21]; }
+	static bool DS_CPL(void) { return CPU_Rep.f_1_ECX_[4]; }
 
 private:
 	static const CPUProbe_Internal CPU_Rep;
@@ -260,6 +262,8 @@ int main(int argc, char* argv[])
 		colorprint("Machine check exception", CPUProbe::MCE());
 		colorprint("APIC", CPUProbe::APIC());
 		colorprint("Secure Virtual machine", CPUProbe::SVM());
+		colorprint("Debug store", CPUProbe::DS());
+		colorprint("DS-CPL", CPUProbe::DS_CPL());
 	} else if(strcmp(argv[1], "instruction") == 0) {
 		colorprint("SSE", CPUProbe::SSE());
 		colorprint("SSE2", CPUProbe::SSE2());
